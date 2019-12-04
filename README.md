@@ -59,6 +59,10 @@ Benchmark overview
 
 Reports are available inside reports folder.
 
+## TODOS:
+[] Whitelisting file: Only optimize files mentioned.
+[] Blacklist file: Optimize all but these files.
+
 ## Support
 
 If you find any problems or bugs, please open a new [issue](https://github.com/kishorsharma/webpack-bundle-optimizer/issues).
