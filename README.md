@@ -59,9 +59,51 @@ Benchmark overview
 
 Reports are available inside reports folder.
 
+## How pagespeed insight works
+
+Acc. to google, [lighthouse pagespeed](https://docs.google.com/spreadsheets/d/1up5rxd4EMCoMaxH8cppcK1x76n6HLx0e7jxb0e0FXvc/edit#gid=0) score are calculated on following metric:
+
+| **Metric** | **Category Weighting** |
+| --- | --- |
+| first-contentful-paint | 20.00% |
+| first-meaningful-paint | 6.70% |
+| speed-index | 26.70% |
+| interactive | 33.30% |
+| first-cpu-idle | 13.30% |
+| max-potential-fid | 0.00% |
+
+Based on the above, plugin targets speed-index and interactive. Following were impactful zone for optimisation:
+
+- Script Evaluation
+- JS execution and parsing
+
+For which following were done as follows:
+
+With optimization we were able to reduce significant time as follows (all time in seconds):
+
+#### Page Speed Optimisation:
+
+|   | FCP (second) | First CPU Idle | TTI (second) | Score |
+| --- | --- | --- | --- | --- |
+| Unoptimized | 1.1 | 12.3 | 13.2 | 33 |
+| Optimized | 1 | 11.6 | 12.4 | 38 |
+| Diff | -0.1 | -0.7 | -0.8 | 5 |
+
+This is a **15% gain** in performance score.
+
+|   | Script Evaluation | JS execution &amp; parsing | Main Thread work |
+| --- | --- | --- | --- |
+| Unoptimized | 5.526 | 0.537 | 8 |
+| Optimized | 4.953 | 0.493 | 7.1 |
+| Diff | 0.575 | 0.1 | 0.9 |
+
+We are saving approx. 1 sec on JS execution time overall after optimisation.
+
 ## TODOS:
-[] Whitelisting file: Only optimize files mentioned.
-[] Blacklist file: Optimize all but these files.
+
+- [ ] Whitelisting file: Only optimize files mentioned.
+
+- [ ] Blacklist file: Optimize all but these files.
 
 ## Support
 
