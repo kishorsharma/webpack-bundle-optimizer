@@ -1,6 +1,6 @@
 {
   "name": "webpack-bundle-optimizer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Optimize a JavaScript file for faster initial execution and parsing, by converting output chunk/bundle as string and using window.Function() for execution.",
   "main": "dist/index.js",
   "dependencies": {},

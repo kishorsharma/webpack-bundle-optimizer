@@ -14,7 +14,8 @@
   A webpack plugin to optimize a JavaScript file for faster initial execution and parsing, by converting output chunk/bundle as string and using window.Function() for execution.
 </div>
 
-## Table of Contents
+# Table of Contents
+
 - [Install](#install)
 - [Usage](#usage)
 - [Documentation](#documentation)
@@ -40,6 +41,54 @@ module.exports = {
 }
 ```
 
+## Options
+
+- whiteList: if defined, file name found in this array will be optimized.
+- BlackList: if defined, file name not found in this array will be optimized.
+- predicate: predicate function which will be used to find filename in array.
+
+### Default predicate function
+
+```JS
+function (pName, cName) {
+    return pName === cName
+};
+```
+
+where:
+
+- pName is name provided in whiteList/blackList array.
+- cName is current filename in processing
+
+## Example
+
+This example assume fileName are generated with hash (which is common pattern now):
+filename : main-98becfc0b54581da9521.js
+
+```JS
+// webpack.config.js
+const Optimizer = require("webpack-bundle-optimizer");
+module.exports = {
+  entry: //...,
+  output: //...,
+  plugins: [
+    new Optimizer({
+    whiteList: ['vendor-react', 'vendor-all', 'runtime', 'main'],
+    predicate: function (pName, cName) {
+      const fileNameParts = cName.split('-');
+      fileNameParts.pop();
+      const fileName = fileNameParts.join('-');
+      return pName === fileName;
+    }
+  })
+  ]
+}
+```
+
+Here as I am removing hash and extension I am passing name in whiteList array without extension.
+
+> Please note: If you have serviceworker with importScript, it should be added in blackList. For more info go [here](https://github.com/kishorsharma/webpack-bundle-optimizer/issues/6).
+
 ## Documentation
 
 Optimisation is one place which make many web developers to bang their head on wall. As mobile user
@@ -50,9 +99,9 @@ One of JavaScript’s heaviest costs is the time for a JS engine to parse/compil
 Modern JS engine V8 (others) do a pre-parse most functions before doing a full parse. This step checks for syntax errors. This saves cost of full parse if there exist any error. However, there are use cases (like webpack output bundle) where we want to execute our JS code as soon as possible.
 In cases (which include common module formats like UMD/Browserify/Webpack/etc.), the browser will actually parse the function twice, first as a pre-parse and second as a full parse.
 
-Benchmark overview
-----
+## Benchmark overview
 
+----
 | Tool | Typical speed boost/regression using webpack-bundle-optimizer | old score | new score
 | ---- | ----- | ----- | ----- |
 | google page speed score| 15.15% | 33 | 38
@@ -101,18 +150,17 @@ We are saving approx. 1 sec on JS execution time overall after optimisation.
 
 ## TODOS:
 
-- [ ] Whitelisting file: Only optimize files mentioned.
+- [x] Whitelisting file: Only optimize files mentioned.
 
-- [ ] Blacklist file: Optimize all but these files.
+- [x] Blacklist file: Optimize all but these files.
 
 ## Support
 
 If you find any problems or bugs, please open a new [issue](https://github.com/kishorsharma/webpack-bundle-optimizer/issues).
 
-## Ref:
+## Ref
 
-* [Why does download and execution time matter?](https://v8.dev/blog/cost-of-javascript-2019#download-execute)
-* [JavaScript Start-up Performance - By Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201)
-* [JavaScript Start-up Optimization - By Addy Osmani](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/javascript-startup-optimization)
-* [Optimize JS](https://github.com/nolanlawson/optimize-js)
-
+- [Why does download and execution time matter?](https://v8.dev/blog/cost-of-javascript-2019#download-execute)
+- [JavaScript Start-up Performance - By Addy Osmani](https://medium.com/reloading/javascript-start-up-performance-69200f43b201)
+- [JavaScript Start-up Optimization - By Addy Osmani](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/javascript-startup-optimization)
+- [Optimize JS](https://github.com/nolanlawson/optimize-js)
